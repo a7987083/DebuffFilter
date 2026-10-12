@@ -1,0 +1,423 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
+	<Script file="DebuffFilter.lua"/>
+	<Script file="DebuffFilterExtension.lua"/>
+	<Script file="DebuffFilterTargetBuff.lua"/>
+	<Script file="DebuffFilterCurrentTargetBuff.lua"/>
+	<Script file="DebuffFilterMultiTargetDebuff.lua"/>
+	<Script file="DebuffFilterTimerBars.lua"/>
+	<Script file="DebuffFilterMoonUI.lua"/>
+	<Button name="DebuffFilter_BuffButtonTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="30" y="30"/>
+		</Size>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture name="$parentIcon"/>
+				<FontString name="$parentCount" inherits="NumberFontNormalSmall">
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="-1" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY">
+				<FontString name="$parentDuration" inherits="GameFontNormalSmall">
+					<Size>
+						<AbsDimension x="35" y="12"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP" relativePoint="BOTTOM">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				this.update = 0;
+			</OnLoad>
+			<OnUpdate>
+				DebuffFilter_BuffButton_OnUpdate(arg1);
+			</OnUpdate>
+			<OnEnter>
+				if (DebuffFilter_Config[DebuffFilter_Player]["tooltips"] == "yes") then
+					GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+					GameTooltip:SetPlayerBuff(this:GetID());
+				end
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnMouseDown>
+				DebuffFilter_OnMouseDown(arg1);
+			</OnMouseDown>
+			<OnMouseUp>
+				DebuffFilter_OnMouseUp(arg1);
+			</OnMouseUp>
+			<OnHide>
+				this:GetParent():StopMovingOrSizing();
+			</OnHide>
+		</Scripts>
+	</Button>
+	<Button name="DebuffFilter_BackdropTemplate" virtual="true">
+		<Size>
+			<AbsDimension x="40" y="40"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER">
+				<Offset>
+					<AbsDimension x="0" y="0"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Backdrop bgFile="Interface\TutorialFrame\TutorialFrameBackground" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+			<EdgeSize>
+				<AbsValue val="16"/>
+			</EdgeSize>
+			<BackgroundInsets>
+				<AbsInset left="5" right="5" top="5" bottom="5"/>
+			</BackgroundInsets>
+		</Backdrop>
+		<Scripts>
+			<OnMouseDown>
+				DebuffFilter_OnMouseDown(arg1);
+			</OnMouseDown>
+			<OnMouseUp>
+				DebuffFilter_OnMouseUp(arg1);
+			</OnMouseUp>
+			<OnHide>
+				this:GetParent():StopMovingOrSizing();
+			</OnHide>
+		</Scripts>
+	</Button>
+	<Frame name="DebuffFilterFrame" parent="UIParent">
+		<Scripts>
+			<OnLoad>
+				DebuffFilter_OnLoad();
+			</OnLoad>
+			<OnEvent>
+				DebuffFilter_OnEvent(event);
+			</OnEvent>
+		</Scripts>
+	</Frame>
+	<Frame name="DebuffFilter_BuffFrame" parent="DebuffFilterFrame" frameStrata="LOW" toplevel="false" movable="true">
+		<Size>
+			<AbsDimension x="30" y="30"/>
+		</Size>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString name="$parentCount" inherits="GameFontNormal" hidden="true">
+					<Size>
+						<AbsDimension x="30" y="12"/>
+					</Size>
+					<Anchors>
+						<Anchor point="RIGHT" relativePoint="LEFT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Anchors>
+			<Anchor point="CENTER" relativeTo="DebuffFilter_BuffDefaultAnchor" relativePoint="CENTER">
+				<Offset>
+					<AbsDimension x="0" y="0"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Frames>
+			<Button name="$parentBackdrop" inherits="DebuffFilter_BackdropTemplate" hidden="true">
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString inherits="GameFontNormal" text="我的增益">
+							<Size>
+								<AbsDimension x="38" y="12"/>
+							</Size>
+							<Anchors>
+								<Anchor point="TOP">
+									<Offset>
+										<AbsDimension x="0" y="15"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Button>
+			<Button name="DebuffFilter_BuffButton0" inherits="DebuffFilter_BuffButtonTemplate" id="0" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton1" inherits="DebuffFilter_BuffButtonTemplate" id="1" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton0" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton2" inherits="DebuffFilter_BuffButtonTemplate" id="2" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton1" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton3" inherits="DebuffFilter_BuffButtonTemplate" id="3" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton2" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton4" inherits="DebuffFilter_BuffButtonTemplate" id="4" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton3" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton5" inherits="DebuffFilter_BuffButtonTemplate" id="5" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton4" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton6" inherits="DebuffFilter_BuffButtonTemplate" id="6" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton5" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton7" inherits="DebuffFilter_BuffButtonTemplate" id="7" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton6" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton8" inherits="DebuffFilter_BuffButtonTemplate" id="8" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton7" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton9" inherits="DebuffFilter_BuffButtonTemplate" id="9" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton8" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton10" inherits="DebuffFilter_BuffButtonTemplate" id="10" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton9" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton11" inherits="DebuffFilter_BuffButtonTemplate" id="11" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton10" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton12" inherits="DebuffFilter_BuffButtonTemplate" id="12" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton11" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton13" inherits="DebuffFilter_BuffButtonTemplate" id="13" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton12" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton14" inherits="DebuffFilter_BuffButtonTemplate" id="14" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton13" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton15" inherits="DebuffFilter_BuffButtonTemplate" id="15" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton14" relativePoint="RIGHT">
+						<Offset>
+							<AbsDimension x="4" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton16" inherits="DebuffFilter_BuffButtonTemplate" id="16" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton15" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton17" inherits="DebuffFilter_BuffButtonTemplate" id="17" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton16" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton18" inherits="DebuffFilter_BuffButtonTemplate" id="18" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton17" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton19" inherits="DebuffFilter_BuffButtonTemplate" id="19" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton18" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton20" inherits="DebuffFilter_BuffButtonTemplate" id="20" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton19" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton21" inherits="DebuffFilter_BuffButtonTemplate" id="21" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton20" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton22" inherits="DebuffFilter_BuffButtonTemplate" id="22" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton21" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton23" inherits="DebuffFilter_BuffButtonTemplate" id="23" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton22" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton24" inherits="DebuffFilter_BuffButtonTemplate" id="24" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton23" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton25" inherits="DebuffFilter_BuffButtonTemplate" id="25" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton24" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton26" inherits="DebuffFilter_BuffButtonTemplate" id="26" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton25" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton27" inherits="DebuffFilter_BuffButtonTemplate" id="27" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton26" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton28" inherits="DebuffFilter_BuffButtonTemplate" id="28" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton27" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton29" inherits="DebuffFilter_BuffButtonTemplate" id="29" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton28" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton30" inherits="DebuffFilter_BuffButtonTemplate" id="30" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton29" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Button name="DebuffFilter_BuffButton31" inherits="DebuffFilter_BuffButtonTemplate" id="31" hidden="true">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="DebuffFilter_BuffButton30" relativePoint="RIGHT">
+						<Offset><AbsDimension x="4" y="0"/></Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+		</Frames>
+	</Frame>
+
+	<!-- Tooltip -->
+	<GameTooltip name="DebuffFilter_Tooltip" frameStrata="TOOLTIP" hidden="true" inherits="GameTooltipTemplate">
+		<Scripts>
+			<OnLoad>
+				this:SetOwner(this, "ANCHOR_NONE")
+			</OnLoad>
+		</Scripts>
+	</GameTooltip>
+</Ui>

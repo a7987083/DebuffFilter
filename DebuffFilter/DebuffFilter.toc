@@ -1,0 +1,15 @@
+## Interface: 11200
+## Version: 1.14.8
+## Title: Debuff Filter
+## Notes: Six independent aura display modes plus 10 large-motif tintable 256x32 TGA timer textures.
+## Title-zhCN: |CFFFF0000[战斗]|R Buff过滤监视
+## Notes-zhCN: 六类光环可独立选择图标框/私有CandyBar计时条/关闭；计时条逻辑移植自用户提供的Chronometer 1.18与CandyBar-2.2。
+## Title-zhTW: |CFFFF0000[戰鬥]|R Buff过滤监视
+## Notes-zhTW: 六類光環可獨立選擇圖示框/私有CandyBar計時條/關閉；計時條邏輯移植自使用者提供的Chronometer 1.18與CandyBar-2.2。
+## X-Repple: 战斗
+## Dependencies: !Libs
+## OptionalDeps: FuBar, Ace2, PaintChipsLib, CompostLib
+## LoadOnDemand: 0
+## SavedVariablesPerCharacter: DebuffFilter_Config
+libs\DebuffFilterCandyBar-2.2\DebuffFilterCandyBar-2.2.lua
+DebuffFilter.xml
